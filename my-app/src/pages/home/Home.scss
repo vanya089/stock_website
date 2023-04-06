@@ -1,0 +1,17 @@
+.home {
+  padding: 40px 0;
+
+  &__content {
+
+  }
+
+
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+  }
+
+}
