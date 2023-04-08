@@ -8,15 +8,15 @@ const Header: React.FC = () => {
                 <div className="header__logo">
                     <img width="70px" src={logo} alt="stock logo"/>
                     <div>
-                        <h1>React stock</h1>
-                        <p>Погрузитесь в мир трейдинга!</p>
+                        <h1>React stocks</h1>
+                        <p>Plunge into the world of trading!</p>
                     </div>
                 </div>
 
                     <nav className="header__navbar">
-                        <a href="">Главная</a>
-                        <a href="">Контакты</a>
-                        <a href="">О нас</a>
+                        <a href="">Main</a>
+                        <a href="">Contact</a>
+                        <a href="">About us</a>
                     </nav>
             </header>
     );

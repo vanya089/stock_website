@@ -1,8 +1,24 @@
-.footer{
-    display: flex;
-    justify-content: space-around;
-    padding: 20px 0;
-    margin-top: 50px;
-    border-top: 1px solid #e8e8e8;
+.footer {
+  //display: flex;
+  //justify-content: space-around;
+  padding: 20px 0;
+  margin-top: 50px;
+  border-top: 1px solid #e8e8e8;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+  color: gray;
+  //background-color: #c7d8ff;
 
+
+  &__nav {
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+
+  }
+    &__info{
+     margin: 30px 645px 0;
+      text-align: center;
+    }
 }
