@@ -1,6 +1,6 @@
 import React from 'react';
 import './Stock.scss'
-import {Draggable, Droppable} from "react-beautiful-dnd";
+import {Draggable} from "react-beautiful-dnd";
 
 type StockProps = {
     index: number;
@@ -13,7 +13,7 @@ type StockProps = {
 
 const Stock: React.FC<StockProps> = ({index, date,dataId, id, value}) => {
     return (
-        <Draggable draggableId={dataId} index={index}>
+        <Draggable key={value} draggableId={dataId} index={index}>
             {provided => (
                 <div
                     {...provided.draggableProps}

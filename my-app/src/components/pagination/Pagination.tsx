@@ -4,20 +4,21 @@ import './Pagination.scss'
 
 type PaginationProps = {
     value: number;
-    onChangePage: (page: number) => void;
+    handlePageClick: (page: number) => void;
+    pageCount: number;
 }
 
-const Pagination: React.FC<PaginationProps>= ({value, onChangePage}) => {
+const Pagination: React.FC<PaginationProps> = ({value, handlePageClick, pageCount}) => {
     return (
         <ReactPaginate
             className="pagination"
             breakLabel="..."
             nextLabel=">"
             previousLabel="<"
-            onPageChange={(event) => onChangePage(event.selected + 1)}
-            pageRangeDisplayed={4}
-            pageCount={3}
-            forcePage={value - 1}
+            onPageChange={(event) => handlePageClick(event.selected)}
+            pageRangeDisplayed={10}
+            pageCount={pageCount}
+            forcePage={value}
         />
     );
 };

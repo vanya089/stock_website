@@ -2,66 +2,76 @@ import React, {useEffect, useState} from 'react';
 import './Home.scss';
 //import stockers from "../../assets/stocks.json";
 import Stock from "../../components/stock/Stock";
-import axios from "axios";
 import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 import Pagination from "../../components/pagination/Pagination";
+import {useAppDispatch} from "../../redux/store";
+import {fetchStocks, stockSelector} from "../../redux/stockSlice";
+import {useSelector} from "react-redux";
+import {currentPageSelector, setCurrentPage, setDragUpdate} from "../../redux/filterSlice";
 
-const secretKey = "sk_4c1ba332fb974cdca322ab308f9ea178";
+
 const Home: React.FC = () => {
-    const [stocks, setStocks] = useState([]);
+    const dispatch = useAppDispatch();
+    const {items, status} = useSelector(stockSelector);
+    const currentPage = useSelector(currentPageSelector);
+    console.log("номер страницы",currentPage)
+
+
+    const getStocks = async () => {
+        try {
+            dispatch(
+                fetchStocks()
+            )
+
+        } catch (e) {
+            console.log('Ошибка при получении!', e)
+        }
+    }
 
     useEffect(() => {
-        async function fetchStocks() {
-            try {
-                const {data} = await axios.get(`https://api.iex.cloud/v1/data/CORE/ENERGY?limit=40&token=${secretKey}`);
-                setStocks(data);
-            } catch (e) {
-                console.log('Ошибка при получении!')
-            }
-        }
+        getStocks();
 
-        fetchStocks();
-    }, [])
+    }, [currentPage])
 
 
 
+ //const [pagi, setPagi] = useState(0)
 
-
-
-    const [currentPage, setCurrentPage] = useState(0)
     const PER_PAGE = 10;
     const offset = currentPage * PER_PAGE;
-    const currentPageData = stocks
+    const currentPageData = items
         .slice(offset, offset + PER_PAGE)
         .map((obj: any, index) =>
-        <Stock key={obj.key} {...obj} index={index}/>
-    );
-    const pageCount = Math.ceil(stocks.length / PER_PAGE);
+            <Stock  {...obj} index={index}/>
+        );
+    const pageCount = Math.ceil(items.length / PER_PAGE);
 
-    function handlePageClick( page: number) {
+    function handlePageClick(page: number) {
         setCurrentPage(page);
     }
 
 
 
 
-    const [drag, updateDrag] = useState(0);
-    // @ts-ignore
-    let onDragEnd = (result) => {
 
-        // @ts-ignore
-        const items = Array.from(drag);
+
+    const onDragEnd = (result: any) => {
+
+        const items = Array.from(currentPageData);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem)
 
-        // @ts-ignore
-        updateDrag(items);
+        setDragUpdate(items);
+
     };
 
 
-   /* const stockList = stocks.map((obj: any, index) =>
-        <Stock key={obj.key} {...obj} index={index}/>
-    );*/
+
+
+     // const stockList = drag.map((obj: any, index) =>
+     //     <Stock key={obj.key} {...obj} index={index}/>
+     // );
+
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
@@ -83,7 +93,7 @@ const Home: React.FC = () => {
                     </Droppable>
 
                 </div>
-                <Pagination value={pageCount} onChangePage={handlePageClick}/>
+                <Pagination value={pageCount} handlePageClick={handlePageClick} pageCount={pageCount}/>
             </div>
         </DragDropContext>
 
