@@ -12,6 +12,14 @@
   margin: 0 0 50px 60px ;
   }
 
+  &__loading {
+    margin-left: 50px;
+    width: 300px;
+  }
+
+  &__error{
+    margin-left: 50px;
+  }
 
   &__items {
     display: grid;

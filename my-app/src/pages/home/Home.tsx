@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import './Home.scss';
-//import stockers from "../../assets/stocks.json";
 import Stock from "../../components/stock/Stock";
 import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 import Pagination from "../../components/pagination/Pagination";
@@ -8,13 +7,13 @@ import {useAppDispatch} from "../../redux/store";
 import {fetchStocks, stockSelector} from "../../redux/stockSlice";
 import {useSelector} from "react-redux";
 import {currentPageSelector, setCurrentPage, setDragUpdate} from "../../redux/filterSlice";
+import loading from '../../assets/Loading_2.gif'
 
 
 const Home: React.FC = () => {
     const dispatch = useAppDispatch();
     const {items, status} = useSelector(stockSelector);
     const currentPage = useSelector(currentPageSelector);
-    console.log("номер страницы",currentPage)
 
 
     const getStocks = async () => {
@@ -24,7 +23,7 @@ const Home: React.FC = () => {
             )
 
         } catch (e) {
-            console.log('Ошибка при получении!', e)
+            console.log('Axios error!', e)
         }
     }
 
@@ -33,9 +32,11 @@ const Home: React.FC = () => {
 
     }, [currentPage])
 
+//pagination
 
+    //const [pagi, setPagi] = useState(0)
 
- //const [pagi, setPagi] = useState(0)
+    //TODO почему то не работает redux с пагинацией
 
     const PER_PAGE = 10;
     const offset = currentPage * PER_PAGE;
@@ -51,10 +52,7 @@ const Home: React.FC = () => {
     }
 
 
-
-
-
-
+//d-n-d
     const onDragEnd = (result: any) => {
 
         const items = Array.from(currentPageData);
@@ -64,13 +62,6 @@ const Home: React.FC = () => {
         setDragUpdate(items);
 
     };
-
-
-
-
-     // const stockList = drag.map((obj: any, index) =>
-     //     <Stock key={obj.key} {...obj} index={index}/>
-     // );
 
 
     return (
@@ -84,7 +75,20 @@ const Home: React.FC = () => {
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
                                 className="home__items">
-                                {currentPageData}
+                                {
+                                    status === 'error' ?
+                                        <div className="home__error">
+                                            <h3>An error has occurred</h3>
+                                            <p>Unfortunately, it was not possible to get stocks. Please try again
+                                                later</p>
+
+                                        </div>
+                                        : <>
+                                            {status === 'loading'
+                                                ? <img className="home__loading" src={loading} alt="loading"/>
+                                                : currentPageData}
+                                        </>
+                                }
                                 {provided.placeholder}
                             </div>
 

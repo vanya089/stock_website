@@ -2,7 +2,6 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import axios from "axios";
 import {RootState} from "./store";
 
-const secretKey = "sk_4c1ba332fb974cdca322ab308f9ea178";
 
 type StockItem = {
     dataId: string;
@@ -36,7 +35,7 @@ export const fetchStocks = createAsyncThunk<StockItem[]>(
 'stock/fetchStocksStatus',
 async() =>{
     const {data} = await axios.get(
-        `https://api.iex.cloud/v1/data/CORE/ENERGY?limit=21&token=${secretKey}`
+        `https://api.iex.cloud/v1/data/CORE/ENERGY?limit=21&token=${process.env.REACT_APP_MY_KEY}`
     );
 
     return data;
@@ -56,7 +55,7 @@ const stockSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchStocks.pending, (state, action) => {
+        builder.addCase(fetchStocks.pending, (state) => {
             state.status = Status.LOADING;
             state.items = [];
         });
@@ -64,7 +63,7 @@ const stockSlice = createSlice({
             state.items = action.payload;
             state.status = Status.SUCCESS;
         });
-        builder.addCase(fetchStocks.rejected, (state, action) => {
+        builder.addCase(fetchStocks.rejected, (state) => {
             state.status = Status.ERROR;
             state.items = [];
         });
