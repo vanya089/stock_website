@@ -15,6 +15,14 @@ const Home: React.FC = () => {
     const {items, status} = useSelector(stockSelector);
     const currentPage = useSelector(currentPageSelector);
 
+    const PER_PAGE = 10;
+    const offset = currentPage * PER_PAGE;
+    const currentPageData = items
+        .slice(offset, offset + PER_PAGE)
+        .map((obj: any, index) =>
+            <Stock  {...obj} index={index}/>
+        );
+    const pageCount = Math.ceil(items.length / PER_PAGE);
 
     const getStocks = async () => {
         try {
@@ -31,6 +39,9 @@ const Home: React.FC = () => {
         getStocks();
 
     }, [currentPage])
+    useEffect(() => {
+        dispatch(setCurrentPage(0))
+    }, [items]);
 
 //pagination
 
@@ -38,29 +49,24 @@ const Home: React.FC = () => {
 
     //TODO почему то не работает redux с пагинацией
 
-    const PER_PAGE = 10;
-    const offset = currentPage * PER_PAGE;
-    const currentPageData = items
-        .slice(offset, offset + PER_PAGE)
-        .map((obj: any, index) =>
-            <Stock  {...obj} index={index}/>
-        );
-    const pageCount = Math.ceil(items.length / PER_PAGE);
+
 
     function handlePageClick(page: number) {
-        setCurrentPage(page);
+        dispatch(setCurrentPage(page));
     }
 
 
 //d-n-d
     const onDragEnd = (result: any) => {
+        if (!result.destination) {
+            return;
+        }
 
         const items = Array.from(currentPageData);
         const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem)
+        items.splice(result.destination.index, 0, reorderedItem);
 
-        setDragUpdate(items);
-
+        dispatch(setDragUpdate(items));
     };
 
 
